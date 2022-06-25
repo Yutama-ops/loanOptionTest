@@ -4,6 +4,7 @@ import data from './mock-data.json';
 import {nanoid} from 'nanoid';
 import ReadOnlyRow from './components/ReadOnlyRow.js';
 import EditableRow from './components/EditableRow';
+import ApiData from './Views/ApiData';
 
 function App() {
   const [contacts, setContacts] = useState(data);
@@ -172,6 +173,7 @@ function App() {
         />
         <button type="submit">Add</button>
       </form>
+      <ApiData />
 
     </div>
   );
