@@ -96,6 +96,17 @@ function App() {
   const handleCancelClick = () => {
     setEditContactId(null);
   }
+
+  const handleDeleteClick = (contactId) => {
+    const newContact = [...contacts];
+
+    const index =   contacts.findIndex((contact) => contact.id === contactId);
+
+    newContact.splice(index, 1);
+
+    setContacts(newContact)
+  }
+
   return (
     <div className="app-container">
       <form onSubmit={handleEditFormSubmit}>
@@ -120,7 +131,9 @@ function App() {
                 /> ) : ( 
                 <ReadOnlyRow 
                   contact={contact} 
-                  handleEditClick={handleEditClick}/>
+                  handleEditClick={handleEditClick}
+                  handleDeleteClick={handleDeleteClick}
+                  />
                 )}
               </Fragment>
             ))}
