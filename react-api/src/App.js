@@ -47,6 +47,7 @@ function App() {
           required="required"
           placeholder='enter your name..'
         />
+        <button type="submit">Add</button>
       </form>
 
     </div>
