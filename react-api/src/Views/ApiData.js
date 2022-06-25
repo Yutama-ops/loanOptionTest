@@ -20,7 +20,7 @@ const ApiData = () => {
         <div>
             <tr>
             { json.map((item, index) => { 
-        return( <td key={index+1}>{item.value}</td> ) } ) }
+        return( <td key={index+1}>1{item.domains}</td> ) } ) }
 
             </tr>
         </div>
