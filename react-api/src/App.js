@@ -1,18 +1,48 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
+// rafce
+import axios from 'axios';
+
 import './App.css';
-import data from './mock-data.json';
+import dt from './mock-data.json';
 import {nanoid} from 'nanoid';
 import ReadOnlyRow from './components/ReadOnlyRow.js';
 import EditableRow from './components/EditableRow';
 import ApiData from './Views/ApiData';
 
 function App() {
-  const [contacts, setContacts] = useState(data);
+  const url = 'http://universities.hipolabs.com/search?country=Australia';
+    const [data, setData] = useState(null);
+    let content = null;
+    const [contacts, setContacts] = useState(dt);
+    
+
+    useEffect(() => {
+        axios.get(url)
+            .then( response => {
+                setData(response.data)
+                // content = response.data
+            })
+    }, [url])
+
+    // if(data){
+    //   content = data.map((item) => {
+    //     // setContacts(content);
+    //     return(item)
+    //   })
+    // }
+    // if(json){
+    //     content = 
+    //     json.map((item) => { 
+    //         return( item.domains ) } ) 
+    
+    // }
+  
   const [addFormData, setAddFormData] = useState({
-    fullName: '',
-    address: '',
-    phoneNumber: '',
-    email: ''
+    name: '',
+      country: '',
+      alpha_two_code: '',
+      web_pages: '',
+      domains: ''
   });
 
   const [editFormData, setEditFormData] = useState({
@@ -51,15 +81,16 @@ function App() {
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
 
-    const newContact = {
+    const newData = {
       id: nanoid(),
-      fullName: addFormData.fullName,
-      address: addFormData.address,
-      phoneNumber: addFormData.phoneNumber,
-      email: addFormData.email
+      name: data[0].name,
+      country: data[0].country,
+      alpha_two_code: data[0].alpha_two_code,
+      web_pages: data[0].web_pages,
+      domains: data[0].domains
     };
-    const newContacts = [...contacts, newContact];
-    setContacts(newContacts);
+    const newDatas = [...data, newData];
+    setData(newDatas);
   };
 
   const handleEditFormSubmit = (event) => {
@@ -98,82 +129,77 @@ function App() {
     setEditContactId(null);
   }
 
-  const handleDeleteClick = (contactId) => {
-    const newContact = [...contacts];
+  const handleDeleteClick = () => {
+    const newData = [...data];
 
-    const index =   contacts.findIndex((contact) => contact.id === contactId);
+    // const index =   contacts.findIndex((contact) => contact.id === contactId);
 
-    newContact.splice(index, 1);
+    newData.splice(data.length-1 , 1);
 
-    setContacts(newContact)
+    setData(newData)
+  }
+
+  if(data){
+    content =  data.map((file)=> (
+      <Fragment>
+        { editContactId === file.id ? (
+        <EditableRow 
+          editFormData={editFormData} 
+          handleEditFormChange={handleEditFormChange}
+          handleCancelClick={handleCancelClick}
+        /> ) : ( 
+        <ReadOnlyRow 
+          contact={file} 
+          handleEditClick={handleEditClick}
+          handleDeleteClick={handleDeleteClick}
+          />
+        )}
+      </Fragment>
+    ))         
   }
 
   return (
     <div className="app-container">
+      {/* <div> {data.map()}</div> */}
       <form onSubmit={handleEditFormSubmit}>
         <table>
           <thead>
             <tr>
+              {/* {typeof(data)} */}
+            {/* {content[0].name} */}
+            {/* {data[0].name} */}
+            {/* {content[0].name} way to call api json*/}
               <th>Name</th>
-              <th>Address</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Action</th>
+              <th>Country</th>
+              <th>Country Code</th>
+              <th>Domain</th>
             </tr>
           </thead>
           <tbody>
-            {contacts.map((contact)=> (
-              <Fragment>
-                { editContactId === contact.id ? (
-                <EditableRow 
-                  editFormData={editFormData} 
-                  handleEditFormChange={handleEditFormChange}
-                  handleCancelClick={handleCancelClick}
-                /> ) : ( 
-                <ReadOnlyRow 
-                  contact={contact} 
-                  handleEditClick={handleEditClick}
-                  handleDeleteClick={handleDeleteClick}
-                  />
-                )}
-              </Fragment>
-            ))}
+            {
+              content
+            }
           </tbody>
         </table>
       </form>
-      <h2>Add Contact</h2>
+      <h2>Buttons</h2>
       <form onSubmit={handleAddFormSubmit}>
-        <input 
-          type="text"
-          name="fullName"
-          required="required"
-          placeholder='enter your name..'
-          onChange={handleAddFormChange}
-        />
-        <input 
-          type="text"
-          name="address"
-          required="required"
-          placeholder='enter your address'
-          onChange={handleAddFormChange}
-        />
-        <input 
-          type="text"
-          name="phoneNumber"
-          required="required"
-          placeholder='enter phone number..'
-          onChange={handleAddFormChange}
-        />
-        <input 
-          type="text"
-          name="email"
-          required="required"
-          placeholder='enter your email..'
-          onChange={handleAddFormChange}
-        />
+                <button 
+                type="button" 
+                // onClick={(event)=> handleEditClick(event, contact)}
+                >
+                    Edit
+                </button>
+                <button 
+                type="button" 
+                onClick={()=> handleDeleteClick(data)}
+                >
+                    Delete
+                </button>
+            
         <button type="submit">Add</button>
       </form>
-      <ApiData />
+      {/* <ApiData /> */}
 
     </div>
   );

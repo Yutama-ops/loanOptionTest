@@ -5,7 +5,7 @@ import axios from 'axios';
 const ApiData = () => {
     const url = 'http://universities.hipolabs.com/search?country=Australia';
     const [json, setJson] = useState(null);
-    let content = null;
+    let content = [];
 
     useEffect(() => {
         axios.get(url)
@@ -13,21 +13,26 @@ const ApiData = () => {
                 setJson(response.data)
             })
     }, [url])
-
     
     if(json){
         content = 
-        <div>
-            <tr>
-            { json.map((item, index) => { 
-        return( <td key={index+1}>1{item.domains}</td> ) } ) }
-
-            </tr>
-        </div>
+        json.map((item) => { 
+            return( item.domains ) } ) 
+    
     }
+    
+    
+    // if(json){
+    //     content = 
+    //     <div>
+    //         <tr>
+           
+    //         </tr>
+    //     </div>
+    // }
 
   return (
-    <div>{content}</div>
+    content
   )
 }
 

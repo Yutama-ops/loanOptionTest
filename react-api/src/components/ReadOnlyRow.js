@@ -3,11 +3,11 @@ import React from 'react'
 const readOnlyRow = ({ contact, handleEditClick, handleDeleteClick }) => {
   return (
         <tr>
-            <td>{contact.fullName}</td>
-            <td>{contact.address}</td>
-            <td>{contact.phoneNumber}</td>
-            <td>{contact.email}</td>
-            <td>
+            <td>{contact.name}</td>
+            <td>{contact.country}</td>
+            <td>{contact.alpha_two_code}</td>
+            <td><a href={contact.web_pages[0]} >{contact.domains[0]}</a></td>
+            {/* <td>
                 <button 
                 type="button" 
                 onClick={(event)=> handleEditClick(event, contact)}
@@ -20,7 +20,7 @@ const readOnlyRow = ({ contact, handleEditClick, handleDeleteClick }) => {
                 >
                     Delete
                 </button>
-            </td>
+            </td> */}
         </tr>
   )
 }
