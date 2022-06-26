@@ -1,0 +1,14 @@
+-- QUERY that will return as requirements
+SELECT 
+	B.NAME
+   	,COUNT(C.ID) AS CUSTOMER_COUNT
+FROM
+		CUSTOMER C
+    LEFT JOIN
+    	BROKER B
+    ON
+    	B.ID = C.BROKER_ID
+GROUP BY
+	B.NAME
+ORDER BY 
+	CUSTOMER_COUNT DESC, B.NAME ASC
