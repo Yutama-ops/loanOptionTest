@@ -3,17 +3,15 @@ import React, { useState, Fragment, useEffect } from 'react';
 import axios from 'axios';
 
 import './App.css';
-import dt from './mock-data.json';
 import {nanoid} from 'nanoid';
 import ReadOnlyRow from './components/ReadOnlyRow.js';
-import EditableRow from './components/EditableRow';
-import ApiData from './Views/ApiData';
+import emptyRow from './components/emptyRow';
 
 function App() {
   const url = 'http://universities.hipolabs.com/search?country=Australia';
     const [data, setData] = useState(null);
     let content = null;
-    const [contacts, setContacts] = useState(dt);
+    const [empty, setEmpty] = useState(null);
     
 
     useEffect(() => {
@@ -23,60 +21,7 @@ function App() {
                 // content = response.data
             })
     }, [url])
-
-    // if(data){
-    //   content = data.map((item) => {
-    //     // setContacts(content);
-    //     return(item)
-    //   })
-    // }
-    // if(json){
-    //     content = 
-    //     json.map((item) => { 
-    //         return( item.domains ) } ) 
     
-    // }
-  
-  const [addFormData, setAddFormData] = useState({
-    name: '',
-      country: '',
-      alpha_two_code: '',
-      web_pages: '',
-      domains: ''
-  });
-
-  const [editFormData, setEditFormData] = useState({
-    fullName: '',
-    address: '',
-    phoneNumber: '',
-    email: ''
-  });
-
-  const [editContactId, setEditContactId] = useState(null);
-
-  const handleAddFormChange = (event) => {
-    event.preventDefault();
-
-    const fieldName = event.target.getAttribute('name');
-    const fieldValue = event.target.value;
-
-    const newFormData = {...addFormData};
-    newFormData[fieldName] = fieldValue;
-
-    setAddFormData(newFormData);
-  };
-
-  const handleEditFormChange = (event) => {
-    event.preventDefault();
-
-    const fieldName = event.target.getAttribute('name');
-    const fieldValue = event.target.value;
-
-    const newFormData = {...editFormData};
-    newFormData[fieldName] = fieldValue;
-
-    setEditFormData(newFormData);
-  };
 
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
@@ -93,41 +38,13 @@ function App() {
     setData(newDatas);
   };
 
-  const handleEditFormSubmit = (event) => {
-    event.preventDefault()
-
-    const editedContact = {
-      id: editContactId,
-      fullName: editFormData.fullName,
-      address: editFormData.address,
-      phoneNumber: editFormData.phoneNumber,
-      email: editFormData.email
-    };
-    const newContacts = [...contacts];
-
-    const index =   contacts.findIndex((contact) => contact.id === editContactId);
-
-    newContacts[index] = editedContact;
-    setContacts(newContacts);
-    setEditContactId(null);
+  const handleLoadClick = (event, contact) => {
+    setEmpty("");
   }
 
-  const handleEditClick = (event, contact) => {
-    event.preventDefault();
-    setEditContactId(contact.id);
-
-    const formValues = {
-      fullName: contact.fullName,
-      address: contact.address,
-      phoneNumber: contact.phoneNumber,
-      email: contact.email
-    }
-    setEditFormData(formValues);
-  }
-
-  const handleCancelClick = () => {
-    setEditContactId(null);
-  }
+  // const handleCancelClick = () => {
+  //   setEditContactId(null);
+  // }
 
   const handleDeleteClick = () => {
     const newData = [...data];
@@ -142,15 +59,11 @@ function App() {
   if(data){
     content =  data.map((file)=> (
       <Fragment>
-        { editContactId === file.id ? (
-        <EditableRow 
-          editFormData={editFormData} 
-          handleEditFormChange={handleEditFormChange}
-          handleCancelClick={handleCancelClick}
+        { empty === null ? (
+        <emptyRow 
         /> ) : ( 
         <ReadOnlyRow 
           contact={file} 
-          handleEditClick={handleEditClick}
           handleDeleteClick={handleDeleteClick}
           />
         )}
@@ -161,7 +74,7 @@ function App() {
   return (
     <div className="app-container">
       {/* <div> {data.map()}</div> */}
-      <form onSubmit={handleEditFormSubmit}>
+      <form>
         <table>
           <thead>
             <tr>
@@ -186,9 +99,9 @@ function App() {
       <form onSubmit={handleAddFormSubmit}>
                 <button 
                 type="button" 
-                // onClick={(event)=> handleEditClick(event, contact)}
+                onClick={(event)=> handleLoadClick()}
                 >
-                    Edit
+                    Load
                 </button>
                 <button 
                 type="button" 
